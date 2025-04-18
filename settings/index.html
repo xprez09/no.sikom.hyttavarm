@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- The '/homey.js' script must be included in your settings view to work -->
+    <script
+      type="text/javascript"
+      src="/homey.js"
+      data-origin="settings"
+    ></script>
+  </head>
+  <body>
+    <header class="homey-header">
+      <h1 class="homey-title" data-i18n="settings.title">
+        <!-- This will be filled with the translated string with key 'settings.title'. -->
+      </h1>
+      <p class="homey-subtitle" data-i18n="settings.subtitle">
+        <!-- This field will also be translated -->
+      </p>
+    </header>
+
+    <fieldset class="homey-form-fieldset">
+      <legend class="homey-form-legend">My Settings</legend>
+      <div class="homey-form-group">
+        <label class="homey-form-label" for="gateway">GatewayID - example ab1234cd</label>
+        <input class="homey-form-input" id="gateway" type="text" value="" />
+      </div>
+      <div class="homey-form-group">
+        <label class="homey-form-label" for="username">Username</label>
+        <input class="homey-form-input" id="username" type="text" value="" />
+      </div>
+      <div class="homey-form-group">
+        <label class="homey-form-label" for="password">Password</label>
+        <input class="homey-form-input" id="password" type="password" value="" />
+      </div>
+    </fieldset>
+
+    <button id="save" class="homey-button-primary-full">Save changes</button>
+
+    <script type="text/javascript">
+      // a method named 'onHomeyReady' must be present in your code
+      function onHomeyReady(Homey) {
+        // Tell Homey we're ready to be displayed
+        Homey.ready();
+        var gatewayElement = document.getElementById("gateway");
+        var usernameElement = document.getElementById("username");
+        var passwordElement = document.getElementById("password");
+        var saveElement = document.getElementById("save");
+
+        Homey.get("gateway", function (err, gateway) {
+          if (err) return Homey.alert(err);
+          gatewayElement.value = gateway;
+        });
+
+        Homey.get("username", function (err, username) {
+          if (err) return Homey.alert(err);
+          usernameElement.value = username;
+        });
+
+        Homey.get("password", function (err, password) {
+          if (err) return Homey.alert(err);
+          passwordElement.value = password;
+        });
+
+        saveElement.addEventListener("click", function (e) {
+          // Show saving indicator
+          saveElement.textContent = "Saving...";
+          saveElement.disabled = true;
+          
+          // Save all settings
+          Promise.all([
+            new Promise((resolve, reject) => {
+              Homey.set("gateway", gatewayElement.value, err => {
+                if (err) reject(err);
+                else resolve();
+              });
+            }),
+            new Promise((resolve, reject) => {
+              Homey.set("username", usernameElement.value, err => {
+                if (err) reject(err);
+                else resolve();
+              });
+            }),
+            new Promise((resolve, reject) => {
+              Homey.set("password", passwordElement.value, err => {
+                if (err) reject(err);
+                else resolve();
+              });
+            })
+          ])
+          .then(() => {
+            // Show success message
+            saveElement.textContent = "Saved!";
+            setTimeout(() => {
+              saveElement.textContent = "Save changes";
+              saveElement.disabled = false;
+            }, 2000);
+            
+            // Notify user of success
+            Homey.alert('Settings saved successfully!');
+          })
+          .catch(err => {
+            // Reset button
+            saveElement.textContent = "Save changes";
+            saveElement.disabled = false;
+            
+            // Show error
+            Homey.alert(err || 'An error occurred while saving settings');
+          });
+        });
+      }
+    </script>
+  </body>
+</html>

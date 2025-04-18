@@ -7,10 +7,11 @@
     "local"
   ],
   "name": {
-    "en": "hyttavarm"
+    "en": "Sikom"
   },
   "description": {
-    "en": "App for å skru på og av Sikom anlegg"
+    "no": "App for å skru på og av Sikom anlegg",
+    "en": "App to control Sikom devices"
   },
   "category": [
     "energy"

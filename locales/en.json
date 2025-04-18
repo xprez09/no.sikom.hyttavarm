@@ -1,1 +1,6 @@
-{}
+{
+  "settings": {
+    "title": "Settings Page",
+    "subtitle": "Please configure. Use this URL to login and find your settings: https://api.connome.com/api/Summary/HTML "
+  }
+}
