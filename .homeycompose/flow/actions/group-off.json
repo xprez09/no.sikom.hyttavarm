@@ -9,6 +9,9 @@
     {
       "type": "number",
       "name": "GroupID",
+      "title": {
+        "en": "Group ID"
+      },
       "placeholder": {
         "en": "group_id"
       },
