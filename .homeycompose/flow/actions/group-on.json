@@ -3,7 +3,7 @@
     "en": "Group On"
   },
   "titleFormatted": {
-    "en": "Turn on group"
+    "en": "Turn on group with ID {GroupID}"
   },
   "hint": {
     "en": "Set device group to on"
