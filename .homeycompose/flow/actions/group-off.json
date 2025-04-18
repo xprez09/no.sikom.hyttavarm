@@ -2,6 +2,9 @@
   "title": {
     "en": "Group Off"
   },
+  "titleFormatted": {
+    "en": "Turn off group"
+  },
   "hint": {
     "en": "Set device group to off"
   },
