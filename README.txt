@@ -1,1 +1,2 @@
-App for å skru på og av Sikom anlegg
+This is a very simple app that currently only can turn on and off a device group in Sikom automations.
+So you need to configure your device groups on Sikom app, and set your wanted temperatures for comfort and heating. And then you can use this Homey app to not having to use the Sikom app for other things than configuration.

@@ -25,5 +25,12 @@
   "author": {
     "name": "Geir Nøstdahl",
     "email": "geir.nostdahl@gmail.com"
+  },
+  "brandColor": "#d0021b",
+  "source": "https://github.com/xprez09/no.sikom.hyttavarm",
+  "support": "https://github.com/xprez09/no.sikom.hyttavarm",
+  "homepage": "https://geir.nostdahl.no",
+  "bugs": {
+    "url": "https://github.com/xprez09/no.sikom.hyttavarm"
   }
 }
