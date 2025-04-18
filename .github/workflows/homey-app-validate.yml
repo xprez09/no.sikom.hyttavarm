@@ -16,8 +16,12 @@ jobs:
       - run: npm install --include=optional sharp
       # Resolve peer dependency warnings
       - run: npm install eslint@7.32.0 eslint-config-airbnb-base@14.2.1 eslint-plugin-homey-app@1.0.2
+      # Fix non-breaking vulnerabilities
+      - run: npm audit fix
+        continue-on-error: true
       # Fix all vulnerabilities, including breaking changes
       - run: npm audit fix --force
+        continue-on-error: true
       - uses: athombv/github-action-homey-app-validate@master
         with:
           level: verified
