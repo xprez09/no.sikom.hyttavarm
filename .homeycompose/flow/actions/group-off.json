@@ -1,0 +1,20 @@
+{
+  "title": {
+    "en": "Group Off"
+  },
+  "hint": {
+    "en": "Set device group to off"
+  },
+  "args": [
+    {
+      "type": "number",
+      "name": "GroupID",
+      "placeholder": {
+        "en": "group_id"
+      },
+      "min": 0,
+      "max": 100,
+      "step": 1
+    }
+  ]
+}
