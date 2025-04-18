@@ -15,7 +15,8 @@
     "typescript": "^5.2.2"
   },
   "dependencies": {
+    "homey": "^3.7.15",
     "node-fetch": "^2.7.0",
-    "homey": "^3.7.15"
+    "ws": "^8.17.1"
   }
 }

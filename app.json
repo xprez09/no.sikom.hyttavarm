@@ -27,6 +27,13 @@
     "name": "Geir Nøstdahl",
     "email": "geir.nostdahl@gmail.com"
   },
+  "brandColor": "#d0021b",
+  "source": "https://github.com/xprez09/no.sikom.hyttavarm",
+  "support": "https://github.com/xprez09/no.sikom.hyttavarm",
+  "homepage": "https://geir.nostdahl.no",
+  "bugs": {
+    "url": "https://github.com/xprez09/no.sikom.hyttavarm"
+  },
   "flow": {
     "actions": [
       {
@@ -36,10 +43,13 @@
         "hint": {
           "en": "Set device group to off"
         },
+        "titleFormatted": {
+          "en": "Turn off group with ID [[groupId]]"
+        },
         "args": [
           {
             "type": "number",
-            "name": "GroupID",
+            "name": "groupId",
             "title": {
               "en": "Group ID"
             },
@@ -47,7 +57,7 @@
               "en": "group_id"
             },
             "min": 0,
-            "max": 100,
+            "max": 999999,
             "step": 1
           }
         ],
@@ -57,13 +67,16 @@
         "title": {
           "en": "Group On"
         },
+        "titleFormatted": {
+          "en": "Turn on group with ID [[groupId]]"
+        },
         "hint": {
           "en": "Set device group to on"
         },
         "args": [
           {
             "type": "number",
-            "name": "GroupID",
+            "name": "groupId",
             "title": {
               "en": "Group ID"
             },
@@ -71,7 +84,7 @@
               "en": "group_id"
             },
             "min": 0,
-            "max": 100,
+            "max": 999999,
             "step": 1
           }
         ],

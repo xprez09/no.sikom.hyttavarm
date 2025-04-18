@@ -2,23 +2,23 @@
   "title": {
     "en": "Group Off"
   },
-  "titleFormatted": {
-    "en": "Turn off group with ID {GroupID}"
-  },
   "hint": {
     "en": "Set device group to off"
+  },
+  "titleFormatted": {
+    "en": "Turn off group with ID [[groupId]]"
   },
   "args": [
     {
       "type": "number",
-      "name": "GroupID",
+      "name": "groupId",
       "title": {
         "en": "Group ID"
       },
       "placeholder": {
         "en": "group_id"
       },
-      "min": 111111,
+      "min": 0,
       "max": 999999,
       "step": 1
     }

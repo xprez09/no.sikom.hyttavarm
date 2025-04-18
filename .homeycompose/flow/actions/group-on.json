@@ -3,7 +3,7 @@
     "en": "Group On"
   },
   "titleFormatted": {
-    "en": "Turn on group with ID {GroupID}"
+    "en": "Turn on group with ID [[groupId]]"
   },
   "hint": {
     "en": "Set device group to on"
@@ -11,7 +11,7 @@
   "args": [
     {
       "type": "number",
-      "name": "GroupID",
+      "name": "groupId",
       "title": {
         "en": "Group ID"
       },
@@ -19,7 +19,7 @@
         "en": "group_id"
       },
       "min": 0,
-      "max": 100,
+      "max": 999999,
       "step": 1
     }
   ]
