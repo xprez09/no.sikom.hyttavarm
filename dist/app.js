@@ -13,77 +13,107 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const homey_1 = __importDefault(require("homey"));
-const node_fetch_1 = __importDefault(require("node-fetch"));
-module.exports = class SikomApp extends homey_1.default.App {
-    /**
-     * onInit is called when the app is initialized.
-     */
+function truncateForLog(input, max = 200) {
+    return input.length <= max ? input : `${input.slice(0, max)}…`;
+}
+class SikomApp extends homey_1.default.App {
     onInit() {
         return __awaiter(this, void 0, void 0, function* () {
             this.log('Sikom App has been initialized');
-            // Register Flow Actions
             this.registerFlowActions();
         });
     }
-    /**
-     * Register flow action handlers
-     */
     registerFlowActions() {
-        // Group On action
         const groupOnAction = this.homey.flow.getActionCard('group-on');
         groupOnAction.registerRunListener((args) => __awaiter(this, void 0, void 0, function* () {
-            this.log('Group On action triggered', args);
-            return this.controlGroup(args.GroupID, true);
+            const { groupId } = args;
+            this.log('Group On action triggered', { groupId });
+            this.assertValidGroupId(groupId);
+            return this.controlGroup(groupId, true);
         }));
-        // Group Off action
         const groupOffAction = this.homey.flow.getActionCard('group-off');
         groupOffAction.registerRunListener((args) => __awaiter(this, void 0, void 0, function* () {
-            this.log('Group Off action triggered', args);
-            return this.controlGroup(args.GroupID, false);
+            const { groupId } = args;
+            this.log('Group Off action triggered', { groupId });
+            this.assertValidGroupId(groupId);
+            return this.controlGroup(groupId, false);
         }));
     }
-    /**
-     * Control a device group
-     */
+    assertValidGroupId(groupId) {
+        if (typeof groupId !== 'number' || !Number.isFinite(groupId)) {
+            throw new Error('Invalid groupId argument supplied to Flow action');
+        }
+    }
     controlGroup(groupId, turnOn) {
         return __awaiter(this, void 0, void 0, function* () {
+            var _a;
+            const username = this.homey.settings.get('username');
+            const password = this.homey.settings.get('password');
+            if (!username || !password) {
+                this.error('Missing settings: please configure username and password');
+                throw new Error('Missing settings: please configure username and password');
+            }
+            // Single authoritative URL: Device AddProperty switch_mode (1 = on, 0 = off)
+            const switchValue = turnOn ? '1' : '0';
+            const url = `https://api.connome.com/api/Device/${groupId}/AddProperty/switch_mode/${switchValue}/`;
+            // Password suffix !!! is required by the BPAPI
+            const passwordToUse = `${password}!!!`;
+            const authHeader = `Basic ${Buffer.from(`${username}:${passwordToUse}`).toString('base64')}`;
+            const startTime = Date.now();
             try {
-                // Get settings
-                const gateway = this.homey.settings.get('gateway');
-                const username = this.homey.settings.get('username');
-                const password = this.homey.settings.get('password');
-                // Validate settings
-                if (!gateway || !username || !password) {
-                    this.error('Missing settings: please configure gateway, username, and password');
-                    throw new Error('Missing settings: please configure gateway, username, and password');
-                }
-                // Build API URL and command
-                const command = turnOn ? 'turnOn' : 'turnOff';
-                const url = `https://api.connome.com/api/Device/${groupId}/${command}`;
-                // Make the REST API call
-                const response = yield (0, node_fetch_1.default)(url, {
+                const response = yield fetch(url, {
                     method: 'GET',
                     headers: {
-                        'Authorization': 'Basic ' + Buffer.from(`${username}:${password}!!!`).toString('base64'),
-                        'Content-Type': 'application/json'
-                    }
+                        Authorization: authHeader,
+                        'Content-Type': 'application/json',
+                    },
                 });
-                // Log the response for debugging
-                const responseBody = yield response.text();
-                this.log(`API Response: ${response.status} - ${responseBody}`);
-                // Check if the response was successful
+                const text = yield response.text();
+                const elapsed = Date.now() - startTime;
+                this.log('API Response', {
+                    url,
+                    status: response.status,
+                    elapsed_ms: elapsed,
+                    body: truncateForLog(text, 300),
+                });
+                // Check HTTP status
                 if (!response.ok) {
-                    throw new Error(`API call failed with status: ${response.status}`);
+                    throw new Error(`HTTP ${response.status}: ${truncateForLog(text)}`);
                 }
-                // Log success
-                this.log(`Successfully turned group ${groupId} ${turnOn ? 'on' : 'off'}`);
+                // Parse JSON and check application-level status
+                let parsed = null;
+                try {
+                    parsed = JSON.parse(text);
+                }
+                catch (_err) {
+                    // Non-JSON response when expecting JSON; treat as success if 200 OK
+                    this.log(`Successfully turned device ${groupId} ${turnOn ? 'on' : 'off'} (non-JSON response)`);
+                    return true;
+                }
+                // Inspect bpapi_status if present
+                // eslint-disable-next-line camelcase
+                let bpStatus;
+                let bpMessage;
+                if ((_a = parsed === null || parsed === void 0 ? void 0 : parsed.Data) === null || _a === void 0 ? void 0 : _a.bpapi_status) {
+                    // eslint-disable-next-line camelcase
+                    const { bpapi_status, bpapi_message } = parsed.Data;
+                    // eslint-disable-next-line camelcase
+                    bpStatus = bpapi_status.toLowerCase();
+                    bpMessage = bpapi_message;
+                }
+                if (bpStatus && bpStatus !== 'ok' && bpStatus !== 'success') {
+                    throw new Error(`API reported non-success status [${bpStatus}]: ${bpMessage || 'unknown'}`);
+                }
+                this.log(`Successfully turned device ${groupId} ${turnOn ? 'on' : 'off'} using Device switch_mode endpoint`);
                 return true;
             }
-            catch (error) {
-                const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-                this.error(`Error controlling group ${groupId}: ${errorMessage}`);
-                throw error;
+            catch (err) {
+                const message = err instanceof Error ? err.message : String(err);
+                this.error('Error controlling device', { groupId, error: message });
+                throw err;
             }
         });
     }
-};
+}
+module.exports = SikomApp; // CommonJS export for Homey
+exports.default = SikomApp; // Optional ES export

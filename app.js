@@ -1,7 +1,7 @@
 'use strict';
 
 const Homey = require('homey');
-const fetch = require('node-fetch');
+// Using global fetch (Node 18+) – node-fetch not required
 
 class SikomApp extends Homey.App {
   
@@ -42,37 +42,40 @@ class SikomApp extends Homey.App {
    */
   async _controlGroup(groupId, turnOn) {
     try {
-      // Get settings
-      const gateway = this.homey.settings.get('gateway');
       const username = this.homey.settings.get('username');
       const password = this.homey.settings.get('password');
-      
-      if (!gateway || !username || !password) {
-        this.error('Missing settings: gateway, username or password not configured');
-        throw new Error('Please configure gateway, username and password in the app settings');
+      if (!username || !password) {
+        this.error('Missing settings: username or password not configured');
+        throw new Error('Please configure username and password in the app settings');
       }
-
-      // API endpoint for Sikom
-      const apiUrl = `https://api.connome.com/api/Gateway/${gateway}/ControlGroupByID/${groupId}?command=${turnOn ? 'On' : 'Off'}`;
-      
-      // Create authorization header with Basic auth
+      if (typeof groupId !== 'number' || !Number.isFinite(groupId)) {
+        throw new Error('Invalid groupId supplied');
+      }
+      const switchValue = turnOn ? '1' : '0';
+      const apiUrl = `https://api.connome.com/api/Device/${groupId}/AddProperty/switch_mode/${switchValue}/`;
       const authHeader = 'Basic ' + Buffer.from(`${username}:${password}`).toString('base64');
-      
-      // Make API request
+      this.log('Issuing request to Device switch_mode endpoint', { apiUrl, groupId, turnOn });
+      const start = Date.now();
       const response = await fetch(apiUrl, {
         method: 'GET',
         headers: {
-          'Authorization': authHeader,
+          Authorization: authHeader,
           'Content-Type': 'application/json'
         }
       });
-      
+      const elapsed = Date.now() - start;
+      const text = await response.text();
+      this.log('API Response', { url: apiUrl, status: response.status, elapsed_ms: elapsed, bodySnippet: text.slice(0, 300) });
       if (!response.ok) {
-        throw new Error(`Failed to control group: ${response.status} ${response.statusText}`);
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
-      
-      const result = await response.json();
-      this.log('API response:', result);
+      let parsed;
+      try { parsed = JSON.parse(text); } catch (_) { parsed = null; }
+      const bpStatus = parsed?.Data?.bpapi_status?.toLowerCase();
+      if (bpStatus && bpStatus !== 'ok' && bpStatus !== 'success') {
+        throw new Error(`API reported non-success status [${bpStatus}]: ${parsed?.Data?.bpapi_message || 'unknown'}`);
+      }
+      this.log(`Successfully turned device ${groupId} ${turnOn ? 'on' : 'off'} using Device switch_mode endpoint`);
       return true;
     } catch (error) {
       this.error('Error controlling group:', error);

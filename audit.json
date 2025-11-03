@@ -1,0 +1,448 @@
+{
+  "auditReportVersion": 2,
+  "vulnerabilities": {
+    "brace-expansion": {
+      "name": "brace-expansion",
+      "severity": "low",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1105443,
+          "name": "brace-expansion",
+          "dependency": "brace-expansion",
+          "title": "brace-expansion Regular Expression Denial of Service vulnerability",
+          "url": "https://github.com/advisories/GHSA-v6h2-p8h4-qcjw",
+          "severity": "low",
+          "cwe": [
+            "CWE-400"
+          ],
+          "cvss": {
+            "score": 3.1,
+            "vectorString": "CVSS:3.1/AV:N/AC:H/PR:L/UI:N/S:U/C:N/I:N/A:L"
+          },
+          "range": ">=1.0.0 <=1.1.11"
+        },
+        {
+          "source": 1105444,
+          "name": "brace-expansion",
+          "dependency": "brace-expansion",
+          "title": "brace-expansion Regular Expression Denial of Service vulnerability",
+          "url": "https://github.com/advisories/GHSA-v6h2-p8h4-qcjw",
+          "severity": "low",
+          "cwe": [
+            "CWE-400"
+          ],
+          "cvss": {
+            "score": 3.1,
+            "vectorString": "CVSS:3.1/AV:N/AC:H/PR:L/UI:N/S:U/C:N/I:N/A:L"
+          },
+          "range": ">=2.0.0 <=2.0.1"
+        }
+      ],
+      "effects": [],
+      "range": "1.0.0 - 1.1.11 || 2.0.0 - 2.0.1",
+      "nodes": [
+        "node_modules/@typescript-eslint/typescript-estree/node_modules/brace-expansion",
+        "node_modules/brace-expansion"
+      ],
+      "fixAvailable": true
+    },
+    "engine.io-client": {
+      "name": "engine.io-client",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        "parseuri"
+      ],
+      "effects": [],
+      "range": "1.0.2 - 6.1.1",
+      "nodes": [
+        "node_modules/homey-api/node_modules/engine.io-client"
+      ],
+      "fixAvailable": true
+    },
+    "eslint": {
+      "name": "eslint",
+      "severity": "low",
+      "isDirect": false,
+      "via": [
+        "inquirer"
+      ],
+      "effects": [
+        "homey"
+      ],
+      "range": "4.0.0-alpha.0 - 7.2.0",
+      "nodes": [
+        "node_modules/homey/node_modules/eslint"
+      ],
+      "fixAvailable": {
+        "name": "homey",
+        "version": "2.34.0",
+        "isSemVerMajor": true
+      }
+    },
+    "external-editor": {
+      "name": "external-editor",
+      "severity": "low",
+      "isDirect": false,
+      "via": [
+        "tmp"
+      ],
+      "effects": [
+        "inquirer"
+      ],
+      "range": ">=1.1.1",
+      "nodes": [
+        "node_modules/external-editor"
+      ],
+      "fixAvailable": {
+        "name": "homey",
+        "version": "2.34.0",
+        "isSemVerMajor": true
+      }
+    },
+    "form-data": {
+      "name": "form-data",
+      "severity": "critical",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1106507,
+          "name": "form-data",
+          "dependency": "form-data",
+          "title": "form-data uses unsafe random function in form-data for choosing boundary",
+          "url": "https://github.com/advisories/GHSA-fjxv-7rqg-78g4",
+          "severity": "critical",
+          "cwe": [
+            "CWE-330"
+          ],
+          "cvss": {
+            "score": 0,
+            "vectorString": null
+          },
+          "range": ">=4.0.0 <4.0.4"
+        }
+      ],
+      "effects": [],
+      "range": "4.0.0 - 4.0.3",
+      "nodes": [
+        "node_modules/form-data"
+      ],
+      "fixAvailable": true
+    },
+    "got": {
+      "name": "got",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1088948,
+          "name": "got",
+          "dependency": "got",
+          "title": "Got allows a redirect to a UNIX socket",
+          "url": "https://github.com/advisories/GHSA-pfrx-2q88-qq97",
+          "severity": "moderate",
+          "cwe": [],
+          "cvss": {
+            "score": 5.3,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:L/A:N"
+          },
+          "range": "<11.8.5"
+        }
+      ],
+      "effects": [
+        "package-json"
+      ],
+      "range": "<11.8.5",
+      "nodes": [
+        "node_modules/got"
+      ],
+      "fixAvailable": {
+        "name": "homey",
+        "version": "2.34.0",
+        "isSemVerMajor": true
+      }
+    },
+    "homey": {
+      "name": "homey",
+      "severity": "moderate",
+      "isDirect": true,
+      "via": [
+        "eslint",
+        "homey-api",
+        "inquirer",
+        "update-notifier"
+      ],
+      "effects": [],
+      "range": ">=2.0.7",
+      "nodes": [
+        "node_modules/homey"
+      ],
+      "fixAvailable": {
+        "name": "homey",
+        "version": "2.34.0",
+        "isSemVerMajor": true
+      }
+    },
+    "homey-api": {
+      "name": "homey-api",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        "socket.io-client"
+      ],
+      "effects": [
+        "homey"
+      ],
+      "range": ">=1.0.1",
+      "nodes": [
+        "node_modules/homey-api"
+      ],
+      "fixAvailable": {
+        "name": "homey",
+        "version": "2.34.0",
+        "isSemVerMajor": true
+      }
+    },
+    "inquirer": {
+      "name": "inquirer",
+      "severity": "low",
+      "isDirect": false,
+      "via": [
+        "external-editor"
+      ],
+      "effects": [
+        "eslint",
+        "homey"
+      ],
+      "range": "3.0.0 - 8.2.6 || 9.0.0 - 9.3.7",
+      "nodes": [
+        "node_modules/homey/node_modules/eslint/node_modules/inquirer",
+        "node_modules/inquirer"
+      ],
+      "fixAvailable": {
+        "name": "homey",
+        "version": "2.34.0",
+        "isSemVerMajor": true
+      }
+    },
+    "latest-version": {
+      "name": "latest-version",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        "package-json"
+      ],
+      "effects": [
+        "update-notifier"
+      ],
+      "range": "0.2.0 - 5.1.0",
+      "nodes": [
+        "node_modules/latest-version"
+      ],
+      "fixAvailable": {
+        "name": "homey",
+        "version": "2.34.0",
+        "isSemVerMajor": true
+      }
+    },
+    "package-json": {
+      "name": "package-json",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        "got"
+      ],
+      "effects": [
+        "latest-version"
+      ],
+      "range": "<=6.5.0",
+      "nodes": [
+        "node_modules/package-json"
+      ],
+      "fixAvailable": {
+        "name": "homey",
+        "version": "2.34.0",
+        "isSemVerMajor": true
+      }
+    },
+    "parseuri": {
+      "name": "parseuri",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1107224,
+          "name": "parseuri",
+          "dependency": "parseuri",
+          "title": "parse-uri Regular expression Denial of Service (ReDoS)",
+          "url": "https://github.com/advisories/GHSA-6fx8-h7jm-663j",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-185",
+            "CWE-1333"
+          ],
+          "cvss": {
+            "score": 0,
+            "vectorString": null
+          },
+          "range": "<2.0.0"
+        }
+      ],
+      "effects": [
+        "engine.io-client",
+        "socket.io-client"
+      ],
+      "range": "<2.0.0",
+      "nodes": [
+        "node_modules/parseuri"
+      ],
+      "fixAvailable": {
+        "name": "homey",
+        "version": "2.34.0",
+        "isSemVerMajor": true
+      }
+    },
+    "socket.io-client": {
+      "name": "socket.io-client",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        "engine.io-client",
+        "parseuri"
+      ],
+      "effects": [
+        "homey-api"
+      ],
+      "range": "1.0.0-pre - 4.4.1",
+      "nodes": [
+        "node_modules/homey-api/node_modules/socket.io-client"
+      ],
+      "fixAvailable": {
+        "name": "homey",
+        "version": "2.34.0",
+        "isSemVerMajor": true
+      }
+    },
+    "tar-fs": {
+      "name": "tar-fs",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1106930,
+          "name": "tar-fs",
+          "dependency": "tar-fs",
+          "title": "tar-fs can extract outside the specified dir with a specific tarball",
+          "url": "https://github.com/advisories/GHSA-8cj5-5rvv-wf4v",
+          "severity": "high",
+          "cwe": [
+            "CWE-22"
+          ],
+          "cvss": {
+            "score": 0,
+            "vectorString": null
+          },
+          "range": ">=2.0.0 <2.1.3"
+        },
+        {
+          "source": 1108293,
+          "name": "tar-fs",
+          "dependency": "tar-fs",
+          "title": "tar-fs has a symlink validation bypass if destination directory is predictable with a specific tarball",
+          "url": "https://github.com/advisories/GHSA-vj76-c3g6-qr5v",
+          "severity": "high",
+          "cwe": [
+            "CWE-22",
+            "CWE-61"
+          ],
+          "cvss": {
+            "score": 0,
+            "vectorString": null
+          },
+          "range": ">=2.0.0 <2.1.4"
+        }
+      ],
+      "effects": [],
+      "range": "2.0.0 - 2.1.3",
+      "nodes": [
+        "node_modules/tar-fs"
+      ],
+      "fixAvailable": true
+    },
+    "tmp": {
+      "name": "tmp",
+      "severity": "low",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1106849,
+          "name": "tmp",
+          "dependency": "tmp",
+          "title": "tmp allows arbitrary temporary file / directory write via symbolic link `dir` parameter",
+          "url": "https://github.com/advisories/GHSA-52f5-9888-hmc6",
+          "severity": "low",
+          "cwe": [
+            "CWE-59"
+          ],
+          "cvss": {
+            "score": 2.5,
+            "vectorString": "CVSS:3.1/AV:L/AC:H/PR:L/UI:N/S:U/C:N/I:L/A:N"
+          },
+          "range": "<=0.2.3"
+        }
+      ],
+      "effects": [
+        "external-editor"
+      ],
+      "range": "<=0.2.3",
+      "nodes": [
+        "node_modules/tmp",
+        "node_modules/tmp-promise/node_modules/tmp"
+      ],
+      "fixAvailable": {
+        "name": "homey",
+        "version": "2.34.0",
+        "isSemVerMajor": true
+      }
+    },
+    "update-notifier": {
+      "name": "update-notifier",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        "latest-version"
+      ],
+      "effects": [
+        "homey"
+      ],
+      "range": "0.2.0 - 5.1.0",
+      "nodes": [
+        "node_modules/update-notifier"
+      ],
+      "fixAvailable": {
+        "name": "homey",
+        "version": "2.34.0",
+        "isSemVerMajor": true
+      }
+    }
+  },
+  "metadata": {
+    "vulnerabilities": {
+      "info": 0,
+      "low": 5,
+      "moderate": 9,
+      "high": 1,
+      "critical": 1,
+      "total": 16
+    },
+    "dependencies": {
+      "prod": 446,
+      "dev": 235,
+      "optional": 24,
+      "peer": 0,
+      "peerOptional": 0,
+      "total": 703
+    }
+  }
+}

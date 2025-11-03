@@ -19,11 +19,7 @@
     </header>
 
     <fieldset class="homey-form-fieldset">
-      <legend class="homey-form-legend">My Settings</legend>
-      <div class="homey-form-group">
-        <label class="homey-form-label" for="gateway">GatewayID - example ab1234cd</label>
-        <input class="homey-form-input" id="gateway" type="text" value="" />
-      </div>
+      <legend class="homey-form-legend">API Credentials</legend>
       <div class="homey-form-group">
         <label class="homey-form-label" for="username">Username</label>
         <input class="homey-form-input" id="username" type="text" value="" />
@@ -32,6 +28,7 @@
         <label class="homey-form-label" for="password">Password</label>
         <input class="homey-form-input" id="password" type="password" value="" />
       </div>
+      <p class="homey-form-hint">Password suffix (!!!) is automatically appended.</p>
     </fieldset>
 
     <button id="save" class="homey-button-primary-full">Save changes</button>
@@ -41,15 +38,9 @@
       function onHomeyReady(Homey) {
         // Tell Homey we're ready to be displayed
         Homey.ready();
-        var gatewayElement = document.getElementById("gateway");
         var usernameElement = document.getElementById("username");
         var passwordElement = document.getElementById("password");
         var saveElement = document.getElementById("save");
-
-        Homey.get("gateway", function (err, gateway) {
-          if (err) return Homey.alert(err);
-          gatewayElement.value = gateway;
-        });
 
         Homey.get("username", function (err, username) {
           if (err) return Homey.alert(err);
@@ -68,12 +59,6 @@
           
           // Save all settings
           Promise.all([
-            new Promise((resolve, reject) => {
-              Homey.set("gateway", gatewayElement.value, err => {
-                if (err) reject(err);
-                else resolve();
-              });
-            }),
             new Promise((resolve, reject) => {
               Homey.set("username", usernameElement.value, err => {
                 if (err) reject(err);
