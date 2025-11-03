@@ -20,7 +20,7 @@
     "typescript": "^5.2.2"
   },
   "dependencies": {
-    "homey": "^3.7.15",
+    "homey": "^3.9.6",
     "pump": "^3.0.3",
     "ws": "^8.18.3"
   },
