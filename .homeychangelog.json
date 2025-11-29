@@ -6,6 +6,12 @@
     "en": "Updated description, icon and images"
   },
   "2.0.2": {
-    "en": "Decription typo fix"
+    "en": "Description typo fix"
+  },
+  "2.0.3": {
+    "en": "Switched to Device switch_mode endpoint. Simplified authentication with automatic password suffix. Updated dependencies and removed deprecated node-fetch."
+  },
+  "2.0.4": {
+    "en": "Added standalone API test script for testing before deployment. Simplified settings UI. Updated all dependencies to latest versions."
   }
 }
