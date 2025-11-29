@@ -21,15 +21,12 @@
   },
   "dependencies": {
     "homey": "^3.9.6",
-    "pump": "^3.0.3",
     "ws": "^8.18.3"
   },
   "overrides": {
     "brace-expansion": "^2.0.1",
     "form-data": "^4.0.4",
-    "tar-fs": "^2.1.4",
-    "tmp": "^0.2.4",
-    "got": "^11.8.5"
+    "tmp": "^0.2.4"
   },
   "engines": {
     "node": ">=18"
