@@ -1,0 +1,26 @@
+{
+  "title": {
+    "en": "Group Is On"
+  },
+  "titleFormatted": {
+    "en": "Group with ID [[groupId]] is on"
+  },
+  "hint": {
+    "en": "Checks whether a group currently reports ON status"
+  },
+  "args": [
+    {
+      "type": "number",
+      "name": "groupId",
+      "title": {
+        "en": "Group ID"
+      },
+      "placeholder": {
+        "en": "group_id"
+      },
+      "min": 0,
+      "max": 999999,
+      "step": 1
+    }
+  ]
+}

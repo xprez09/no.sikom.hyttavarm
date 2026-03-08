@@ -29,6 +29,12 @@ node test-api.js 361177 on
 
 # Test turning device OFF
 node test-api.js 361177 off
+
+# Try reading current status
+node test-api.js 361177 status
+
+# Status with payload debugging
+node test-api.js 361177 status --verbose
 ```
 
 Replace `361177` with your actual device/group ID.
@@ -69,6 +75,14 @@ BPAPI Status: error
 BPAPI Message: Device not found or access denied
 ```
 → Verify the device ID at https://api.connome.com/api/Summary/HTML
+
+### ⚠️ Status Not Yet Detected
+
+If the script cannot find a `switch_mode` field, you may see:
+```
+⚠️  Could not detect switch_mode from current endpoint candidates.
+```
+Run with `--verbose` and inspect JSON payloads so we can map the exact status field from your API response.
 
 ## Finding Your Device ID
 

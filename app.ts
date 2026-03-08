@@ -6,10 +6,24 @@ function truncateForLog(input: string, max: number = 200): string {
   return input.length <= max ? input : `${input.slice(0, max)}…`;
 }
 
+type BpapiStatusResponse = {
+  Data?: {
+    'bpapi_status'?: string;
+    'bpapi_message'?: string;
+    device?: {
+      Properties?: {
+        'switch_mode'?: { Value?: string | number };
+        'switch_readable_mode'?: { Value?: string };
+      };
+    };
+  };
+};
+
 class SikomApp extends Homey.App {
   async onInit(): Promise<void> {
     this.log('Sikom App has been initialized');
     this.registerFlowActions();
+    this.registerFlowConditions();
   }
 
   private registerFlowActions(): void {
@@ -48,6 +62,22 @@ class SikomApp extends Homey.App {
     }
   }
 
+  private registerFlowConditions(): void {
+    const groupIsOnCondition = this.homey.flow.getConditionCard('group-is-on');
+    groupIsOnCondition.registerRunListener(async (args) => {
+      const { groupId } = args as { groupId: number };
+      this.log('Group Is On condition triggered', { groupId });
+      this.assertValidGroupId(groupId);
+      this.ensureConfigured();
+      return this.getGroupStatus(groupId);
+    });
+  }
+
+  private getAuthHeader(username: string, password: string): string {
+    const passwordToUse = `${password}!!!`;
+    return `Basic ${Buffer.from(`${username}:${passwordToUse}`).toString('base64')}`;
+  }
+
   private assertValidGroupId(groupId: unknown): asserts groupId is number {
     if (typeof groupId !== 'number' || !Number.isFinite(groupId)) {
       throw new Error('Invalid groupId argument supplied to Flow action');
@@ -66,9 +96,7 @@ class SikomApp extends Homey.App {
     // Single authoritative URL: Device AddProperty switch_mode (1 = on, 0 = off)
     const switchValue = turnOn ? '1' : '0';
     const url = `https://api.connome.com/api/Device/${groupId}/AddProperty/switch_mode/${switchValue}/`;
-    // Password suffix !!! is required by the BPAPI
-    const passwordToUse = `${password}!!!`;
-    const authHeader = `Basic ${Buffer.from(`${username}:${passwordToUse}`).toString('base64')}`;
+    const authHeader = this.getAuthHeader(username, password);
 
     const startTime = Date.now();
     try {
@@ -128,6 +156,85 @@ class SikomApp extends Homey.App {
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err);
       this.error('Error controlling device', { groupId, error: message });
+      throw err;
+    }
+  }
+
+  private async getGroupStatus(groupId: number): Promise<boolean> {
+    const username = this.homey.settings.get('username');
+    const password = this.homey.settings.get('password');
+
+    if (!username || !password) {
+      this.error('Missing settings: please configure username and password');
+      throw new Error('Missing settings: please configure username and password');
+    }
+
+    const url = `https://api.connome.com/api/Device/${groupId}/`;
+    const authHeader = this.getAuthHeader(username, password);
+    const startTime = Date.now();
+
+    try {
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          Authorization: authHeader,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      const text = await response.text();
+      const elapsed = Date.now() - startTime;
+
+      this.log('Status API Response', {
+        url,
+        status: response.status,
+        elapsed_ms: elapsed,
+        body: truncateForLog(text, 300),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${truncateForLog(text)}`);
+      }
+
+      let parsed: BpapiStatusResponse | null = null;
+
+      try {
+        parsed = JSON.parse(text);
+      } catch (_err) {
+        throw new Error('Status endpoint returned non-JSON response');
+      }
+
+      // eslint-disable-next-line camelcase
+      const bpStatus = parsed?.Data?.bpapi_status?.toLowerCase();
+      // eslint-disable-next-line camelcase
+      const bpMessage = parsed?.Data?.bpapi_message;
+      if (bpStatus && bpStatus !== 'ok' && bpStatus !== 'success') {
+        throw new Error(`API reported non-success status [${bpStatus}]: ${bpMessage || 'unknown'}`);
+      }
+
+      // eslint-disable-next-line camelcase
+      const readable = parsed?.Data?.device?.Properties?.switch_readable_mode?.Value?.toLowerCase();
+      if (readable === 'on') {
+        return true;
+      }
+      if (readable === 'off') {
+        return false;
+      }
+
+      // eslint-disable-next-line camelcase
+      const rawSwitchMode = parsed?.Data?.device?.Properties?.switch_mode?.Value;
+      const switchMode = String(rawSwitchMode ?? '').trim();
+      if (switchMode === '1') {
+        return true;
+      }
+      if (switchMode === '0') {
+        return false;
+      }
+
+      throw new Error('Could not determine group status from API response');
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      this.error('Error reading group status', { groupId, error: message });
       throw err;
     }
   }
