@@ -16,5 +16,8 @@
   },
   "2.1.0": {
     "en": "fix: add missing password suffix to Homey app auth header - Fixed bug where password alias! suffix was missing in app.js authentication - This caused Homey app to fail while local tests succeeded - Password suffix is now consistently applied in both contexts - Updated all packages to latest compatible versions - Fixed ESLint configuration for API field naming - Bumped version to 2.0.5"
+  },
+  "2.2.0": {
+    "en": "feat(flow): add group status condition and local status test tooling"
   }
 }
