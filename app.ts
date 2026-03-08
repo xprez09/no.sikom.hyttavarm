@@ -18,7 +18,12 @@ class SikomApp extends Homey.App {
       const { groupId } = args as { groupId: number };
       this.log('Group On action triggered', { groupId });
       this.assertValidGroupId(groupId);
-      return this.controlGroup(groupId, true);
+      this.ensureConfigured();
+      this.controlGroup(groupId, true).catch((err) => {
+        const message = err instanceof Error ? err.message : String(err);
+        this.error('Background Group On failed', { groupId, error: message });
+      });
+      return true;
     });
 
     const groupOffAction = this.homey.flow.getActionCard('group-off');
@@ -26,8 +31,21 @@ class SikomApp extends Homey.App {
       const { groupId } = args as { groupId: number };
       this.log('Group Off action triggered', { groupId });
       this.assertValidGroupId(groupId);
-      return this.controlGroup(groupId, false);
+      this.ensureConfigured();
+      this.controlGroup(groupId, false).catch((err) => {
+        const message = err instanceof Error ? err.message : String(err);
+        this.error('Background Group Off failed', { groupId, error: message });
+      });
+      return true;
     });
+  }
+
+  private ensureConfigured(): void {
+    const username = this.homey.settings.get('username');
+    const password = this.homey.settings.get('password');
+    if (!username || !password) {
+      throw new Error('Missing settings: please configure username and password');
+    }
   }
 
   private assertValidGroupId(groupId: unknown): asserts groupId is number {
