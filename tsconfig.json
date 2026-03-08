@@ -4,9 +4,9 @@
     "module": "commonjs",
     "strict": true,
     "esModuleInterop": true,
-    "outDir": "./dist",
+    "outDir": "./.homeybuild",
     "skipLibCheck": true // Add this to avoid issues with type definitions
   },
   "include": ["**/*.ts"],
-  "exclude": ["node_modules", "dist"] // Exclude the output directory
+  "exclude": ["node_modules", "dist", ".homeybuild"] // Exclude output directories
 }
