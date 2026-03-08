@@ -1,6 +1,6 @@
 {
   "name": "no.sikom.hyttavarm",
-  "version": "2.0.4",
+  "version": "2.0.5",
   "scripts": {
     "build": "tsc",
     "lint": "eslint --ext .js,.ts --ignore-path .eslintignore .",

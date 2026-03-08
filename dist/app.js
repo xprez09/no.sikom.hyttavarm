@@ -81,6 +81,7 @@ class SikomApp extends homey_1.default.App {
                     throw new Error(`HTTP ${response.status}: ${truncateForLog(text)}`);
                 }
                 // Parse JSON and check application-level status
+                // eslint-disable-next-line camelcase
                 let parsed = null;
                 try {
                     parsed = JSON.parse(text);
@@ -99,6 +100,7 @@ class SikomApp extends homey_1.default.App {
                     const { bpapi_status, bpapi_message } = parsed.Data;
                     // eslint-disable-next-line camelcase
                     bpStatus = bpapi_status.toLowerCase();
+                    // eslint-disable-next-line camelcase
                     bpMessage = bpapi_message;
                 }
                 if (bpStatus && bpStatus !== 'ok' && bpStatus !== 'success') {

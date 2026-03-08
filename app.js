@@ -53,7 +53,7 @@ class SikomApp extends Homey.App {
       }
       const switchValue = turnOn ? '1' : '0';
       const apiUrl = `https://api.connome.com/api/Device/${groupId}/AddProperty/switch_mode/${switchValue}/`;
-      const authHeader = 'Basic ' + Buffer.from(`${username}:${password}`).toString('base64');
+      const authHeader = 'Basic ' + Buffer.from(`${username}:${password}!!!`).toString('base64');
       this.log('Issuing request to Device switch_mode endpoint', { apiUrl, groupId, turnOn });
       const start = Date.now();
       const response = await fetch(apiUrl, {

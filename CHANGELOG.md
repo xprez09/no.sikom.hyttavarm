@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.0.5] - 2026-03-08
+
+### Fixed
+- **Password Authentication Bug**: Fixed missing `!!!` suffix in Homey app authentication header
+  - The suffix was hardcoded in test script but missing from compiled app.js
+  - Now consistently appends `!!!` to password in both local testing and Homey deployment
+  - This was causing API authentication failures in the Homey app despite working in standalone tests
+
+### Changed
+- **Dependencies Updated**: Updated npm packages to latest compatible versions
+- **Code Quality**: Fixed ESLint configuration to better handle API field naming conventions
+  - Added proper eslint-disable comments for BPAPI field names (`bpapi_status`, `bpapi_message`)
+  - Excluded test-api.js from TypeScript linting (it's a standalone test script)
+
 ## [2.0.4] - 2025-11-03
 
 ### Added

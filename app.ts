@@ -78,6 +78,7 @@ class SikomApp extends Homey.App {
       }
 
       // Parse JSON and check application-level status
+      // eslint-disable-next-line camelcase
       let parsed: { Data?: { bpapi_status?: string; bpapi_message?: string } } | null = null;
       try {
         parsed = JSON.parse(text);
@@ -96,6 +97,7 @@ class SikomApp extends Homey.App {
         const { bpapi_status, bpapi_message } = parsed.Data;
         // eslint-disable-next-line camelcase
         bpStatus = bpapi_status.toLowerCase();
+        // eslint-disable-next-line camelcase
         bpMessage = bpapi_message;
       }
 
